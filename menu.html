@@ -1,0 +1,180 @@
+<!-- ================= MENU FILE (menu.html) ================= -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Drive Infinite - Menu</title>
+<style>
+body{
+margin:0;
+font-family:Arial;
+background:linear-gradient(to bottom,#87ceeb,#dff6ff);
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.menu{
+text-align:center;
+}
+
+.title{
+font-size:70px;
+font-weight:900;
+color:#003b6f;
+margin-bottom:10px;
+}
+
+.subtitle{
+font-size:18px;
+color:#1b4f72;
+margin-bottom:40px;
+}
+
+button{
+width:260px;
+padding:15px;
+margin:10px;
+font-size:18px;
+font-weight:bold;
+border:none;
+border-radius:14px;
+background:white;
+cursor:pointer;
+box-shadow:0 6px 20px rgba(0,0,0,0.15);
+transition:0.2s;
+}
+
+button:hover{transform:scale(1.05)}
+
+.infoBox{
+display:none;
+margin-top:20px;
+background:white;
+padding:20px;
+border-radius:12px;
+width:320px;
+box-shadow:0 5px 20px rgba(0,0,0,0.2);
+}
+</style>
+</head>
+<body>
+
+<div class="menu">
+<div class="title">DRIVE INFINITE</div>
+<div class="subtitle">Sky Theme Driving Game</div>
+
+<button onclick="startGame()">Start Game</button>
+<button onclick="graphicsMenu()">Graphics Settings</button>
+<button onclick="showInfo()">More</button>
+
+<div class="infoBox" id="info">
+<b>How this game was made</b><br><br>
+This game was made using HTML, CSS and JavaScript.<br>
+The terrain is generated automatically.<br>
+The world is infinite.<br><br>
+<b>Creator:</b> Sangamesh Hiremath
+</div>
+</div>
+
+<script>
+function startGame(){
+window.location.href = "game.html";
+}
+
+function graphicsMenu(){
+let choice = prompt("Type: low / medium / high");
+if(choice){
+localStorage.setItem("graphics",choice);
+alert("Graphics saved: "+choice);
+}
+}
+
+function showInfo(){
+document.getElementById("info").style.display="block";
+}
+</script>
+
+</body>
+</html>
+
+
+
+<!-- ================= GAME FILE (game.html) ================= -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Drive Infinite - Game</title>
+<style>
+body{margin:0;overflow:hidden;background:#87ceeb;font-family:Arial}
+
+.info{
+position:absolute;
+top:15px;
+left:15px;
+background:rgba(0,0,0,0.6);
+color:white;
+padding:12px 18px;
+border-radius:12px;
+font-size:14px;
+}
+
+.speed{
+position:absolute;
+bottom:20px;
+left:50%;
+transform:translateX(-50%);
+background:rgba(0,0,0,0.7);
+color:white;
+padding:12px 25px;
+border-radius:20px;
+font-size:20px;
+}
+</style>
+</head>
+<body>
+
+<div class="info">
+<b>Drive Infinite</b><br>
+W / Up = Accelerate<br>
+S / Down = Brake<br>
+A / Left = Turn Left<br>
+D / Right = Turn Right
+</div>
+
+<div class="speed" id="speed">0 km/h | 0 m</div>
+
+<script>
+
+// Read graphics settings from menu
+let graphics = localStorage.getItem("graphics") || "high";
+console.log("Graphics mode:",graphics);
+
+let speed = 0;
+let distance = 0;
+const keys = {};
+
+window.addEventListener("keydown",e=>keys[e.key.toLowerCase()] = true);
+window.addEventListener("keyup",e=>keys[e.key.toLowerCase()] = false);
+
+function animate(){
+requestAnimationFrame(animate);
+
+if(keys["w"]||keys["arrowup"]) speed+=0.02;
+if(keys["s"]||keys["arrowdown"]) speed-=0.02;
+
+speed*=0.97;
+
+distance += Math.abs(speed*2);
+
+const kmh = Math.abs(speed*200).toFixed(0);
+document.getElementById("speed").innerHTML = kmh+" km/h | "+Math.floor(distance)+" m";
+}
+
+animate();
+</script>
+
+</body>
+</html>
